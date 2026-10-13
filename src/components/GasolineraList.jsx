@@ -2,7 +2,10 @@ import { useState } from 'react'
 import React from 'react'
 import ReportarPrecio from './ReportarPrecio'
 
-export default function GasolineraList({ gasolineras }) {
+// Columnas de precios en la tabla resumen (Super primero)
+const COLUMNAS_COMBUSTIBLE = ['Super', 'Extra', 'Diesel']
+
+export default function GasolineraList({ gasolineras, selectedFuel = '' }) {
   const [sortConfig, setSortConfig] = useState({ key: 'nombre', direction: 'asc' })
   const [expandedId, setExpandedId] = useState(null)
 
@@ -96,9 +99,16 @@ export default function GasolineraList({ gasolineras }) {
                   Ciudad <SortIcon column="ciudad" />
                 </button>
               </th>
-              <th className="px-6 py-4 text-center">Extra</th>
-              <th className="px-6 py-4 text-center">Super</th>
-              <th className="px-6 py-4 text-center">Diesel</th>
+              {COLUMNAS_COMBUSTIBLE.map(fuel => (
+                <th
+                  key={fuel}
+                  className={`px-6 py-4 text-center transition-colors ${
+                    fuel === selectedFuel ? 'bg-purple-200 text-purple-900' : ''
+                  }`}
+                >
+                  {fuel}
+                </th>
+              ))}
               <th className="px-6 py-4 text-center">Acción</th>
             </tr>
           </thead>
@@ -113,21 +123,18 @@ export default function GasolineraList({ gasolineras }) {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-gray-700">{gasolinera.ciudad}</td>
-                  <td className="px-6 py-4 text-center">
-                    <span className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, 'Extra')))}>
-                      ${getPromedioPrecio(gasolinera.precios, 'Extra')}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, 'Super')))}>
-                      ${getPromedioPrecio(gasolinera.precios, 'Super')}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, 'Diesel')))}>
-                      ${getPromedioPrecio(gasolinera.precios, 'Diesel')}
-                    </span>
-                  </td>
+                  {COLUMNAS_COMBUSTIBLE.map(fuel => (
+                    <td
+                      key={fuel}
+                      className={`px-6 py-4 text-center transition-colors ${
+                        fuel === selectedFuel ? 'bg-purple-50 text-lg' : ''
+                      }`}
+                    >
+                      <span className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, fuel)))}>
+                        ${getPromedioPrecio(gasolinera.precios, fuel)}
+                      </span>
+                    </td>
+                  ))}
                   <td className="px-6 py-4 text-center">
                     <button
                       onClick={() => toggleExpand(gasolinera.id)}
@@ -225,24 +232,19 @@ export default function GasolineraList({ gasolineras }) {
 
             {/* Precios Resumen */}
             <div className="p-4 grid grid-cols-3 gap-2">
-              <div className="text-center p-2 bg-blue-50 rounded">
-                <p className="text-xs text-gray-600">Extra</p>
-                <p className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, 'Extra')))}>
-                  ${getPromedioPrecio(gasolinera.precios, 'Extra')}
-                </p>
-              </div>
-              <div className="text-center p-2 bg-green-50 rounded">
-                <p className="text-xs text-gray-600">Super</p>
-                <p className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, 'Super')))}>
-                  ${getPromedioPrecio(gasolinera.precios, 'Super')}
-                </p>
-              </div>
-              <div className="text-center p-2 bg-yellow-50 rounded">
-                <p className="text-xs text-gray-600">Diesel</p>
-                <p className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, 'Diesel')))}>
-                  ${getPromedioPrecio(gasolinera.precios, 'Diesel')}
-                </p>
-              </div>
+              {COLUMNAS_COMBUSTIBLE.map(fuel => (
+                <div
+                  key={fuel}
+                  className={`text-center p-2 rounded ${getColorByFuel(fuel)} ${
+                    fuel === selectedFuel ? 'ring-2 ring-purple-300' : ''
+                  }`}
+                >
+                  <p className="text-xs text-gray-600">{fuel}</p>
+                  <p className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, fuel)))}>
+                    ${getPromedioPrecio(gasolinera.precios, fuel)}
+                  </p>
+                </div>
+              ))}
             </div>
 
             {/* Botón Expandir */}

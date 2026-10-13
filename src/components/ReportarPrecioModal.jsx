@@ -110,10 +110,7 @@ export default function ReportarPrecioModal({
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">Reportar Precio</h2>
-            <p className="text-xs text-green-700 font-medium">Prioridad: Gasolina Super</p>
-          </div>
+          <h2 className="text-xl font-bold text-gray-900">Reportar Precio</h2>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
@@ -180,32 +177,20 @@ export default function ReportarPrecioModal({
               </div>
             )}
 
-            {/* Tipo de Combustible - Super destacado (híbridos/turbo) */}
+            {/* Tipo de Combustible */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Tipo de Combustible
               </label>
-              <button
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, tipo_combustible: 'Super' }))}
-                className={`w-full mb-2 px-4 py-3 rounded-lg border-2 text-left transition-all ${
-                  formData.tipo_combustible === 'Super'
-                    ? 'bg-green-600 border-green-600 text-white shadow-md'
-                    : 'bg-green-50 border-green-400 text-green-800 hover:bg-green-100'
-                }`}
-              >
-                <span className="block font-bold">⛽ Super</span>
-                <span className="block text-xs opacity-90">Híbridos y turbo · el precio varía entre gasolineras</span>
-              </button>
-              <div className="grid grid-cols-3 gap-2">
-                {FUEL_TYPES.filter(f => f !== 'Super').map(fuel => (
+              <div className="grid grid-cols-4 gap-2">
+                {FUEL_TYPES.map(fuel => (
                   <button
                     key={fuel}
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, tipo_combustible: fuel }))}
-                    className={`px-2 py-1.5 rounded-lg border text-sm transition-all ${
+                    className={`px-2 py-1.5 rounded-lg border text-sm font-semibold transition-all ${
                       formData.tipo_combustible === fuel
-                        ? 'bg-gray-700 border-gray-700 text-white'
+                        ? 'bg-green-600 border-green-600 text-white'
                         : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50'
                     }`}
                   >
@@ -242,9 +227,6 @@ export default function ReportarPrecioModal({
             {/* Info */}
             <div className="p-3 bg-blue-50 rounded-lg text-xs text-blue-700 border border-blue-200">
               <p className="font-semibold mb-1">💡 Tip</p>
-              {formData.tipo_combustible === 'Super' && (
-                <p className="mb-1">El precio de la Super cambia según la gasolinera: tu reporte ayuda a otros conductores de híbridos y turbo a ahorrar.</p>
-              )}
               <p>Tu reporte es anónimo. Múltiples reportes con el mismo precio aumentan la confiabilidad.</p>
             </div>
 

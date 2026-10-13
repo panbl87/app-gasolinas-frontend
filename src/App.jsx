@@ -74,12 +74,12 @@ function App() {
       precios: precios.filter(p => p.gasolinera_id === gas.id)
     }))
 
-    // Filtrar por tipo de combustible
+    // Filtrar por tipo de combustible: solo gasolineras con ese combustible,
+    // pero conservando todos sus precios para mostrarlos en la tabla
     if (selectedFuel) {
-      resultado = resultado.map(gas => ({
-        ...gas,
-        precios: gas.precios.filter(p => p.tipo_combustible === selectedFuel)
-      })).filter(gas => gas.precios.length > 0)
+      resultado = resultado.filter(gas =>
+        gas.precios.some(p => p.tipo_combustible === selectedFuel)
+      )
     }
 
     // Filtrar por búsqueda (nombre de gasolinera)
@@ -176,7 +176,7 @@ function App() {
                 )}
 
                 {filteredData.length > 0 && (
-                  <GasolineraList gasolineras={filteredData} />
+                  <GasolineraList gasolineras={filteredData} selectedFuel={selectedFuel} />
                 )}
               </>
             )}
