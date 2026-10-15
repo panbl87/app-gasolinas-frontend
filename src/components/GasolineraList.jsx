@@ -19,18 +19,32 @@ export default function GasolineraList({ gasolineras, selectedFuel = '' }) {
     return colors[fuel] || 'bg-gray-50'
   }
 
-  const getPriceColor = (price) => {
-    if (price < 2.00) return 'text-green-600 font-bold'
-    if (price < 2.50) return 'text-blue-600 font-bold'
-    return 'text-red-600 font-bold'
-  }
-
   const getPromedioPrecio = (precios, tipo) => {
     if (!precios || precios.length === 0) return '-'
     const filtered = precios.filter(p => p.tipo_combustible === tipo)
     if (filtered.length === 0) return '-'
     const suma = filtered.reduce((acc, p) => acc + p.precio, 0)
     return (suma / filtered.length).toFixed(2)
+  }
+
+  // Promedio de cada combustible entre las gasolineras mostradas
+  const promedioGeneral = {}
+  for (const tipo of ['Super', 'Extra', 'Diesel', 'Ecopaís']) {
+    const valores = gasolineras
+      .map(g => parseFloat(getPromedioPrecio(g.precios, tipo)))
+      .filter(v => !isNaN(v))
+    if (valores.length > 0) {
+      promedioGeneral[tipo] = valores.reduce((acc, v) => acc + v, 0) / valores.length
+    }
+  }
+
+  // Verde si está al menos 2% por debajo del promedio, rojo si está 2% por encima
+  const getPriceColor = (price, tipo) => {
+    const promedio = promedioGeneral[tipo]
+    if (isNaN(price) || !promedio) return 'text-gray-500 font-bold'
+    if (price <= promedio * 0.98) return 'text-green-600 font-bold'
+    if (price >= promedio * 1.02) return 'text-red-600 font-bold'
+    return 'text-gray-800 font-bold'
   }
 
   const sortedGasolineras = [...gasolineras].sort((a, b) => {
@@ -130,7 +144,7 @@ export default function GasolineraList({ gasolineras, selectedFuel = '' }) {
                         fuel === selectedFuel ? 'bg-purple-50 text-lg' : ''
                       }`}
                     >
-                      <span className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, fuel)))}>
+                      <span className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, fuel)), fuel)}>
                         ${getPromedioPrecio(gasolinera.precios, fuel)}
                       </span>
                     </td>
@@ -177,7 +191,7 @@ export default function GasolineraList({ gasolineras, selectedFuel = '' }) {
                                 <div key={idx} className={`p-3 rounded ${getColorByFuel(precio.tipo_combustible)}`}>
                                   <div className="flex justify-between items-center mb-1">
                                     <span className="font-semibold text-gray-800">{precio.tipo_combustible}</span>
-                                    <span className={getPriceColor(precio.precio)}>
+                                    <span className={getPriceColor(precio.precio, precio.tipo_combustible)}>
                                       ${precio.precio.toFixed(2)}
                                     </span>
                                   </div>
@@ -240,7 +254,7 @@ export default function GasolineraList({ gasolineras, selectedFuel = '' }) {
                   }`}
                 >
                   <p className="text-xs text-gray-600">{fuel}</p>
-                  <p className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, fuel)))}>
+                  <p className={getPriceColor(parseFloat(getPromedioPrecio(gasolinera.precios, fuel)), fuel)}>
                     ${getPromedioPrecio(gasolinera.precios, fuel)}
                   </p>
                 </div>
@@ -271,7 +285,7 @@ export default function GasolineraList({ gasolineras, selectedFuel = '' }) {
                       gasolinera.precios.map((precio, idx) => (
                         <div key={idx} className="flex justify-between text-sm">
                           <span className="font-semibold">{precio.tipo_combustible}</span>
-                          <span className={getPriceColor(precio.precio)}>
+                          <span className={getPriceColor(precio.precio, precio.tipo_combustible)}>
                             ${precio.precio.toFixed(2)}
                           </span>
                         </div>

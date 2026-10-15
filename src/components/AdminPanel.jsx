@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://192.168.10.133:3000/api'
+import { API_URL } from '../config'
 
 const AUTO_REFRESH_MS = 30000
 

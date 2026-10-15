@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import axios from 'axios'
 import AdminPanel from '../components/AdminPanel'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://192.168.10.133:3000/api'
+import { API_URL } from '../config'
 const STORAGE_KEY = 'adminToken'
 
 const leerToken = () => {

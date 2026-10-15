@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { GoogleMap, Marker } from '@react-google-maps/api'
 import axios from 'axios'
 
-const API_URL = 'http://192.168.10.133:3000/api'
+import { API_URL } from '../config'
 
 const containerStyle = {
   width: '100%',

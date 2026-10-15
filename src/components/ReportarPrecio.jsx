@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
 
-const API_URL = 'http://192.168.10.133:3000/api'
+import { API_URL } from '../config'
 
 export default function ReportarPrecio({ gasolineraId, gasolineranombre, onSuccess }) {
   const [isOpen, setIsOpen] = useState(false)

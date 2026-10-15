@@ -3,7 +3,7 @@ import axios from 'axios'
 import CrearGasolineraForm from './CrearGasolineraForm'
 import { FUEL_TYPES, DEFAULT_FUEL } from './FuelFilter'
 
-const API_URL = 'http://192.168.10.133:3000/api'
+import { API_URL } from '../config'
 
 // Rangos de precios por tipo de combustible (Ecuador)
 const RANGOS_PRECIO = {

@@ -8,7 +8,7 @@ import GasolineraList from './components/GasolineraList'
 import Map from './components/Map'
 import ReportarPrecioModal from './components/ReportarPrecioModal'
 
-const API_URL = 'http://192.168.10.133:3000/api'
+import { API_URL } from './config'
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
 function App() {
